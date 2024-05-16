@@ -26,7 +26,6 @@ model User {
   tasks            Task[]
   timeBlocks       TimeBlock[]
   pomodoroSessions PomodoroSession[]
-  PomodoroRound    PomodoroRound[]
 
   @@map("user")
 }
@@ -83,9 +82,7 @@ model PomodoroRound {
   isCompleted  Boolean @default(false) @map("is_completed")
 
   pomodoroSessionId String          @map("pomodoro_session_id")
-  pomodoroSession   PomodoroSession @relation(fields: [pomodoroSessionId], references: [id])
-  User              User?           @relation(fields: [userId], references: [id])
-  userId            String?
+  pomodoroSession   PomodoroSession @relation(fields: [pomodoroSessionId], references: [id], onDelete: Cascade)
 
   @@map("pomodoro_round")
 }
