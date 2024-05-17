@@ -4,12 +4,15 @@ import { AuthDto } from 'src/auth/dto/auth.dto'
 import { PrismaService } from 'src/prisma.service'
 import { UserDto } from './dto/user.dto'
 import { startOfDay, subDays } from 'date-fns'
+import { ErrorHandler } from 'src/decorators/catch-error.decorator'
 
 
 @Injectable()
 export class UserService {
 	constructor(private prisma: PrismaService) { }
 
+
+	@ErrorHandler("user")
 	getById(id: string) {
 		return this.prisma.user.findUnique({
 			where: { id },
@@ -17,12 +20,14 @@ export class UserService {
 		})
 	}
 
+	@ErrorHandler("user")
 	getByEmail(email: string) {
 		return this.prisma.user.findUnique({
 			where: { email }
 		})
 	}
 
+	@ErrorHandler("user")
 	async getProfile(id: string) {
 		const profile = await this.getById(id)
 		const totalTasks = profile.tasks.length
@@ -63,6 +68,7 @@ export class UserService {
 		}
 	}
 
+	@ErrorHandler("user")
 	async create(dto: AuthDto) {
 		const user = {
 			email: dto.email,
@@ -72,6 +78,7 @@ export class UserService {
 		return this.prisma.user.create({ data: user })
 	}
 
+	@ErrorHandler("user")
 	async update(id: string, dto: UserDto) {
 		let data = dto
 		if (dto.password) {

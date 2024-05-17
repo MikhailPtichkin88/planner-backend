@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { PomodoroSessionDto } from './dto/pomodoro-session.dto'
 import { PomodoroRoundDto } from './dto/pomodoro-round.dto'
+import { ErrorHandler } from 'src/decorators/catch-error.decorator'
 
 
 @Injectable()
 export class PomodoroService {
 	constructor(private prisma: PrismaService) { }
 
+	@ErrorHandler("session")
 	async getTodaySession(userId: string) {
 		// один день - одна сессия, поэтому ищем по дате без времени
 		const today = new Date().toISOString().split("T")[0]
@@ -23,6 +25,7 @@ export class PomodoroService {
 		})
 	}
 
+	@ErrorHandler("session")
 	async create(userId: string) {
 		const todaySession = await this.getTodaySession(userId)
 		if (todaySession) return todaySession
@@ -46,6 +49,7 @@ export class PomodoroService {
 		})
 	}
 
+	@ErrorHandler("session")
 	async updateSession(dto: Partial<PomodoroSessionDto>, pomodoroSessionId: string, userId: string) {
 		return this.prisma.pomodoroSession.update({
 			where: {
@@ -56,6 +60,7 @@ export class PomodoroService {
 		})
 	}
 
+	@ErrorHandler("round")
 	async updateRound(dto: Partial<PomodoroRoundDto>, pomodoroRoundId: string) {
 		return this.prisma.pomodoroRound.update({
 			where: {
@@ -65,6 +70,7 @@ export class PomodoroService {
 		})
 	}
 
+	@ErrorHandler("round")
 	async deleteSession(pomodoroSessionId: string, userId: string) {
 		return this.prisma.pomodoroSession.delete({
 			where: {
