@@ -1,16 +1,19 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import * as cookieParser from 'cookie-parser'
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
 
-	app.setGlobalPrefix('api')
+	app.setGlobalPrefix('/')
 	app.use(cookieParser())
 	app.enableCors({
-		origin: ['http://localhost:3000'],
+		origin: process.env.CORS_ORIGIN.split(','),
 		credentials: true,
 		exposedHeaders: ['set-cookie']
 	})
-	await app.listen(3000)
+	await app.listen(parseInt(process.env.PORT, 10) || 4200);
 }
 bootstrap()
