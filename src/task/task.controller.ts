@@ -1,6 +1,6 @@
 
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
-import { TaskService } from './Task.service';
+import { TaskService } from './task.service';
 import { Auth } from 'src/decorators/auth.decorator';
 import { CurrentUser } from 'src/decorators/user.decorator';
 import { TaskDto } from './dto/task.dto';
