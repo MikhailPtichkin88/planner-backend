@@ -9,22 +9,17 @@ import { UserService } from 'src/user/user.service'
 import { AuthDto } from './dto/auth.dto'
 import { verify } from 'argon2'
 import { Response } from 'express'
-import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class AuthService {
 	REFRESH_TOKEN_NAME = 'refreshToken'
 	EXPIRE_DAY_REFRESH_TOKEN = 1
-	REFRESH_TOKEN_DOMAIN: string
+
 
 	constructor(
 		private jwt: JwtService,
 		private userService: UserService,
-		private configService: ConfigService
 	) {
-		this.REFRESH_TOKEN_DOMAIN = this.configService.get<string>(
-			'REFRESH_TOKEN_DOMAIN'
-		)
 	}
 	async login(dto: AuthDto) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,8 +73,7 @@ export class AuthService {
 			httpOnly: true,
 			expires: expiresIn,
 			secure: true,
-			sameSite: 'none',
-			domain: this.REFRESH_TOKEN_DOMAIN
+			sameSite: "lax",
 		})
 	}
 
@@ -88,8 +82,7 @@ export class AuthService {
 			httpOnly: true,
 			expires: new Date(0),
 			secure: true,
-			sameSite: 'none',
-			domain: this.REFRESH_TOKEN_DOMAIN
+			sameSite: "lax",
 		})
 	}
 }
